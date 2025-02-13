@@ -42,6 +42,7 @@ exception:
       at-mobiles: 
         - 钉钉机器人发送通知时 需要@的钉钉用户账户，可多选
       msg-type: 消息文本类型 目前支持 text markdown
+      custome-title:: 自定义钉钉机器人发送通知时的标题(鉴权)
 ```
 #### 企业微信配置
 

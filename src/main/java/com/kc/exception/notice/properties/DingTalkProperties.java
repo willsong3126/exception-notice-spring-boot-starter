@@ -33,4 +33,10 @@ public class DingTalkProperties {
      * 消息类型 暂只支持text和markdown
      */
     private DingTalkMsgTypeEnum msgType = TEXT;
+
+    /**
+     * 自定义title
+     */
+    private String customeTitle;
+
 }

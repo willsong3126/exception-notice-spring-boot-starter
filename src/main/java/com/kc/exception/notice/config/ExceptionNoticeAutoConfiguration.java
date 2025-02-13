@@ -14,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,31 +34,33 @@ import java.util.List;
 @Configuration
 @ConditionalOnProperty(prefix = ExceptionNoticeProperties.PREFIX, name = "enable", havingValue = "true")
 @EnableConfigurationProperties(value = ExceptionNoticeProperties.class)
+@ComponentScan(basePackages = {"com.kc.exception.notice"})
 public class ExceptionNoticeAutoConfiguration {
 
-    private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired(required = false)
-    private MailSender mailSender;
+    private DingTalkNoticeProcessor dingTalkNoticeProcessor;
+
+    @Autowired(required = false)
+    private WeChatNoticeProcessor weChatNoticeProcessor;
+
+    @Autowired(required = false)
+    private MailNoticeProcessor mailNoticeProcessor;
+
+    @Autowired
+    private ExceptionNoticeProperties properties;
 
     @Bean(initMethod = "start")
-    public ExceptionNoticeHandler noticeHandler(ExceptionNoticeProperties properties) {
+    public ExceptionNoticeHandler noticeHandler() {
         List<INoticeProcessor> noticeProcessors = new ArrayList<>(2);
-        INoticeProcessor noticeProcessor;
-        DingTalkProperties dingTalkProperties = properties.getDingTalk();
-        if (null != dingTalkProperties) {
-            noticeProcessor = new DingTalkNoticeProcessor(restTemplate, dingTalkProperties);
-            noticeProcessors.add(noticeProcessor);
+        if (dingTalkNoticeProcessor != null) {
+            noticeProcessors.add(dingTalkNoticeProcessor);
         }
-        WeChatProperties weChatProperties = properties.getWeChat();
-        if (null != weChatProperties) {
-            noticeProcessor = new WeChatNoticeProcessor(restTemplate, weChatProperties);
-            noticeProcessors.add(noticeProcessor);
+        if (weChatNoticeProcessor != null) {
+            noticeProcessors.add(weChatNoticeProcessor);
         }
-        MailProperties email = properties.getMail();
-        if (null != email && null != mailSender) {
-            noticeProcessor = new MailNoticeProcessor(mailSender, email);
-            noticeProcessors.add(noticeProcessor);
+        if (mailNoticeProcessor != null) {
+            noticeProcessors.add(mailNoticeProcessor);
         }
         Assert.isTrue(noticeProcessors.size() != 0, "Exception notification configuration is incorrect");
         return new ExceptionNoticeHandler(properties, noticeProcessors);
@@ -66,4 +71,13 @@ public class ExceptionNoticeAutoConfiguration {
     public ExceptionListener exceptionListener(ExceptionNoticeHandler noticeHandler) {
         return new ExceptionListener(noticeHandler);
     }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(5))
+                .build();
+    }
+
 }

@@ -24,12 +24,16 @@ public class DingTalkExceptionInfo {
 
     private DingDingAt at;
 
+    private static final String DEFAULT_TITLE = "【%s】 %s";
+
     public DingTalkExceptionInfo(ExceptionInfo exceptionInfo, DingTalkProperties dingTalkProperties) {
         DingTalkMsgTypeEnum msgType = dingTalkProperties.getMsgType();
+        String customeTitle = dingTalkProperties.getCustomeTitle();
         if (msgType.equals(TEXT)) {
-            this.text = new DingDingText(exceptionInfo.createText());
+            this.text = new DingDingText(String.format(DEFAULT_TITLE, customeTitle, exceptionInfo.createText()));
         } else if (msgType.equals(MARKDOWN)) {
-            this.markdown = new DingDingMarkDown(exceptionInfo.getProject(), exceptionInfo.createDingTalkMarkDown());
+            this.markdown = new DingDingMarkDown(exceptionInfo.getProject(),
+                    String.format(DEFAULT_TITLE, customeTitle, exceptionInfo.createDingTalkMarkDown()));
         }
         this.msgtype = msgType.getMsgType();
         this.at = new DingDingAt(dingTalkProperties.getAtMobiles(), dingTalkProperties.getIsAtAll());

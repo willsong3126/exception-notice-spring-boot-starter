@@ -1,9 +1,12 @@
 package com.kc.exception.notice.process;
 
 import com.kc.exception.notice.content.ExceptionInfo;
+import com.kc.exception.notice.properties.ExceptionNoticeProperties;
 import com.kc.exception.notice.properties.MailProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -12,21 +15,19 @@ import org.springframework.util.StringUtils;
  *
  * @author kongchong
  */
+@Component
 public class MailNoticeProcessor implements INoticeProcessor {
 
-    private final MailProperties mailProperties;
 
-    private final MailSender mailSender;
+    @Autowired(required = false)
+    private MailSender mailSender;
+    @Autowired
+    private ExceptionNoticeProperties exceptionNoticeProperties;
 
-    public MailNoticeProcessor(MailSender mailSender, MailProperties emailProperties) {
-        Assert.noNullElements(emailProperties.getTo(), "email 'from' property must not be null");
-        Assert.noNullElements(emailProperties.getTo(), "email 'to' property must not be null");
-        this.mailSender = mailSender;
-        this.mailProperties = emailProperties;
-    }
 
     @Override
     public void sendNotice(ExceptionInfo exceptionInfo) {
+        MailProperties mailProperties = exceptionNoticeProperties.getMail();
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(mailProperties.getFrom());
         mailMessage.setTo(mailProperties.getTo());
