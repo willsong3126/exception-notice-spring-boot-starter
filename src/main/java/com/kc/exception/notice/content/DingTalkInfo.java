@@ -5,16 +5,20 @@ import com.kc.exception.notice.properties.DingTalkProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
+
 import static com.kc.exception.notice.enums.DingTalkMsgTypeEnum.MARKDOWN;
 import static com.kc.exception.notice.enums.DingTalkMsgTypeEnum.TEXT;
 
 /**
- * 钉钉异常通知消息请求体
+ * 钉钉通知消息请求体
  *
  * @author kongchong
  */
 @Data
-public class DingTalkExceptionInfo {
+public class DingTalkInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String msgtype;
 
@@ -24,9 +28,9 @@ public class DingTalkExceptionInfo {
 
     private DingDingAt at;
 
-    private static final String DEFAULT_TITLE = "【%s】 %s";
+    private static final String DEFAULT_TITLE = "【%s】%n %s";
 
-    public DingTalkExceptionInfo(ExceptionInfo exceptionInfo, DingTalkProperties dingTalkProperties) {
+    public DingTalkInfo(ExceptionInfo exceptionInfo, DingTalkProperties dingTalkProperties) {
         DingTalkMsgTypeEnum msgType = dingTalkProperties.getMsgType();
         String customeTitle = dingTalkProperties.getCustomeTitle();
         if (msgType.equals(TEXT)) {
@@ -34,6 +38,19 @@ public class DingTalkExceptionInfo {
         } else if (msgType.equals(MARKDOWN)) {
             this.markdown = new DingDingMarkDown(exceptionInfo.getProject(),
                     String.format(DEFAULT_TITLE, customeTitle, exceptionInfo.createDingTalkMarkDown()));
+        }
+        this.msgtype = msgType.getMsgType();
+        this.at = new DingDingAt(dingTalkProperties.getAtMobiles(), dingTalkProperties.getIsAtAll());
+    }
+
+    public DingTalkInfo(NormalInfo normalInfo, DingTalkProperties dingTalkProperties) {
+        DingTalkMsgTypeEnum msgType = dingTalkProperties.getMsgType();
+        String customeTitle = dingTalkProperties.getCustomeTitle();
+        if (msgType.equals(TEXT)) {
+            this.text = new DingDingText(String.format(DEFAULT_TITLE, customeTitle, normalInfo));
+        } else if (msgType.equals(MARKDOWN)) {
+            this.markdown = new DingDingMarkDown(normalInfo.getProject(),
+                    String.format(DEFAULT_TITLE, customeTitle, normalInfo.createDingTalkMarkDown()));
         }
         this.msgtype = msgType.getMsgType();
         this.at = new DingDingAt(dingTalkProperties.getAtMobiles(), dingTalkProperties.getIsAtAll());

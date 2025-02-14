@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import org.springframework.util.DigestUtils;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,7 +20,9 @@ import static java.util.stream.Collectors.toList;
  * @author kongchong
  */
 @Data
-public class ExceptionInfo {
+public class ExceptionInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 工程名
@@ -134,7 +137,7 @@ public class ExceptionInfo {
     @SneakyThrows
     public String createDingTalkMarkDown() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("#### 项目名称：").append("\n").append("> ").append(project).append("\n");
+        stringBuilder.append("### 项目名称：").append("\n").append("> ").append(project).append("\n");
         stringBuilder.append("#### 类路径：").append("\n").append("> ").append(classPath).append("\n");
         stringBuilder.append("#### 请求地址：").append("\n").append("> ").append(reqAddress).append("\n");
         stringBuilder.append("#### 方法名：").append("\n").append("> ").append(methodName).append("\n");

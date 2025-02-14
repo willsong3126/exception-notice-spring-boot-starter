@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.kongchong</groupId>
+    <groupId>com.vini.commonUtils</groupId>
     <artifactId>exception-notice-spring-boot-starter</artifactId>
     <name>exception-notice-spring-boot-starter</name>
-    <version>1.2.5-willsong-SNAPSHOT</version>
+    <version>1.3.0</version>
     <url>https://github.com/kongchong/exception-notice-spring-boot-starter.git</url>
     <description>a spring boot starter for exception notice</description>
 

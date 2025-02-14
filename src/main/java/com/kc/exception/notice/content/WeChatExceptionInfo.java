@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 import static com.kc.exception.notice.enums.WeChatMsgTypeEnum.MARKDOWN;
 import static com.kc.exception.notice.enums.WeChatMsgTypeEnum.TEXT;
 
@@ -15,7 +17,9 @@ import static com.kc.exception.notice.enums.WeChatMsgTypeEnum.TEXT;
  * @author kongchong
  */
 @Data
-public class WeChatExceptionInfo {
+public class WeChatExceptionInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private WeChatText text;
     private WeChatMarkDown markdown;

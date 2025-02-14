@@ -1,6 +1,7 @@
 package com.kc.exception.notice.process;
 
 import com.kc.exception.notice.content.ExceptionInfo;
+import com.kc.exception.notice.content.NormalInfo;
 import com.kc.exception.notice.properties.ExceptionNoticeProperties;
 import com.kc.exception.notice.properties.MailProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,16 @@ public class MailNoticeProcessor implements INoticeProcessor {
         mailMessage.setText(exceptionInfo.createText());
         mailMessage.setSubject(String.format("来自%s项目的异常通知", exceptionInfo.getProject()));
         mailSender.send(mailMessage);
+    }
+
+    /**
+     * 正常信息通知
+     *
+     * @param normalInfo
+     */
+    @Override
+    public void sendNormalNotice(NormalInfo normalInfo) {
+        throw new RuntimeException("暂不支持邮件通知");
     }
 
 }

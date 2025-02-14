@@ -1,6 +1,7 @@
 package com.kc.exception.notice.process;
 
 import com.kc.exception.notice.content.ExceptionInfo;
+import com.kc.exception.notice.content.NormalInfo;
 import com.kc.exception.notice.content.WeChatExceptionInfo;
 import com.kc.exception.notice.properties.ExceptionNoticeProperties;
 import com.kc.exception.notice.properties.WeChatProperties;
@@ -36,6 +37,16 @@ public class WeChatNoticeProcessor implements INoticeProcessor {
         WeChatExceptionInfo weChatNoticeProcessor = new WeChatExceptionInfo(exceptionInfo, weChatProperties);
         String result = restTemplate.postForObject(weChatProperties.getWebHook(), weChatNoticeProcessor, String.class);
         logger.debug(result);
+    }
+
+    /**
+     * 正常信息通知
+     *
+     * @param normalInfo
+     */
+    @Override
+    public void sendNormalNotice(NormalInfo normalInfo) {
+        throw new RuntimeException("暂不支持企业微信通知");
     }
 
 }

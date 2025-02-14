@@ -27,6 +27,10 @@ pom.xml中增加项目依赖
 第二步：增加配置文件
 
 以下以yml配置文件的配置方式为例
+
+** atMobiles：在text内容里要有@人的手机号，只有在群内的成员才可被@，非群内成员手机号会被脱敏。**
+
+** isAtAll：在text 内容中需有@所有人 **
 ```
 exception:
   notice:
@@ -41,8 +45,10 @@ exception:
       web-hook: 钉钉机器人的webHook地址，可依次点击钉钉软件的头像，机器人管理，选中机器人来查看
       at-mobiles: 
         - 钉钉机器人发送通知时 需要@的钉钉用户账户，可多选
+      is-at-all: 是否@所有人
       msg-type: 消息文本类型 目前支持 text markdown
       custome-title:: 自定义钉钉机器人发送通知时的标题(鉴权)
+      
 ```
 #### 企业微信配置
 

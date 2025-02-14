@@ -39,29 +39,13 @@ public class ExceptionNoticeAutoConfiguration {
 
 
     @Autowired(required = false)
-    private DingTalkNoticeProcessor dingTalkNoticeProcessor;
-
-    @Autowired(required = false)
-    private WeChatNoticeProcessor weChatNoticeProcessor;
-
-    @Autowired(required = false)
-    private MailNoticeProcessor mailNoticeProcessor;
+    private List<INoticeProcessor> noticeProcessors;
 
     @Autowired
     private ExceptionNoticeProperties properties;
 
     @Bean(initMethod = "start")
     public ExceptionNoticeHandler noticeHandler() {
-        List<INoticeProcessor> noticeProcessors = new ArrayList<>(2);
-        if (dingTalkNoticeProcessor != null) {
-            noticeProcessors.add(dingTalkNoticeProcessor);
-        }
-        if (weChatNoticeProcessor != null) {
-            noticeProcessors.add(weChatNoticeProcessor);
-        }
-        if (mailNoticeProcessor != null) {
-            noticeProcessors.add(mailNoticeProcessor);
-        }
         Assert.isTrue(noticeProcessors.size() != 0, "Exception notification configuration is incorrect");
         return new ExceptionNoticeHandler(properties, noticeProcessors);
     }

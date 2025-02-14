@@ -25,7 +25,7 @@ public class DingTalkProperties {
     private String[] atMobiles;
 
     /**
-     * 发送消息时被@的钉钉用户手机号
+     * 是否@所有人
      */
     private Boolean isAtAll = false;
 
